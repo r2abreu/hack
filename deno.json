@@ -1,0 +1,11 @@
+{
+  "name": "@r2/hack",
+  "version": "0.3.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./main.ts"
+  },
+  "publish": {
+    "exclude": ["*.test.ts"]
+  }
+}
