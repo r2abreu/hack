@@ -1,6 +1,6 @@
 {
   "name": "@r2/hack",
-  "version": "0.8.0",
+  "version": "0.10.0",
   "license": "MIT",
   "exports": {
     ".": "./main.ts"

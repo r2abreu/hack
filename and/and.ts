@@ -1,11 +1,11 @@
 import nand from "../nand/nand.ts";
-import type { binary } from "../utility.ts";
+import type { bit } from "../utility.ts";
 /**
  * @module AND
  *
- * @param {binary} a
- * @param {binary} b
- * @returns {binary}
+ * @param {bit} a
+ * @param {bit} b
+ * @returns {bit}
  *
  * | A | B | A AND B |
  * |---|---|:--------:|
@@ -14,7 +14,7 @@ import type { binary } from "../utility.ts";
  * | 1 | 0 |   0    |
  * | 1 | 1 |   1    |
  */
-export default function (a: binary, b: binary): binary {
+export default function (a: bit, b: bit): bit {
   const w1 = nand(a, b);
   return nand(w1, w1);
 }
