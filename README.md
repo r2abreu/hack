@@ -13,11 +13,23 @@ or(1, 0); //  -> 1
 
 ## Chip Set
 
-| Name | Supported |
-| :--: | :-------: |
-| nand |    ✔️     |
-| and  |    ✔️     |
-|  or  |    ✔️     |
+|   Name    | Supported |
+| :-------: | :-------: |
+|    not    |    ✔️     |
+|   not16   |    ✔️     |
+|    and    |    ✔️     |
+|    or     |    ✔️     |
+|    xor    |    ✔️     |
+|  or8way   |    ✔️     |
+|   or16    |    ✔️     |
+|   and16   |    ✔️     |
+|    mux    |    ✔️     |
+|   mux16   |    ✔️     |
+| mux4way16 |    ✔️     |
+| mux8way16 |    ✔️     |
+|   dmux    |    ✔️     |
+| dmux4way  |    ✔️     |
+| dmux8way  |    ✔️     |
 
 ## Disclaimer
 
