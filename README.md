@@ -11,29 +11,9 @@ and(1, 1); //  -> 1
 or(1, 0); //  -> 1
 ```
 
-## Chip Set
-
-|   Name    | Supported |
-| :-------: | :-------: |
-|    not    |    ✔️     |
-|   not16   |    ✔️     |
-|    and    |    ✔️     |
-|    or     |    ✔️     |
-|    xor    |    ✔️     |
-|  or8way   |    ✔️     |
-|   or16    |    ✔️     |
-|   and16   |    ✔️     |
-|    mux    |    ✔️     |
-|   mux16   |    ✔️     |
-| mux4way16 |    ✔️     |
-| mux8way16 |    ✔️     |
-|   dmux    |    ✔️     |
-| dmux4way  |    ✔️     |
-| dmux8way  |    ✔️     |
-
 ## Disclaimer
 
-🚧 **This project is a work in progress.** Some features may be incomplete or subject to change. Contributions and feedback are welcome!
+**This project is a work in progress.** Some features may be incomplete or subject to change. Feedback is welcomed!
 
 ## Acknowledgments
 
