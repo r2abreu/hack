@@ -1,5 +1,5 @@
 import not from "../not/not.ts";
-import type { BitTuple } from "../utility.ts";
+import type { BitTuple, bit } from "../utility.ts";
 
 /**
  * @module NOT16
@@ -12,9 +12,10 @@ import type { BitTuple } from "../utility.ts";
  * Function: for i = 0..15 out[i] = Not(_in[i])
  */
 export default function (_in: BitTuple<16>): BitTuple<16> {
+  const out = new Array<bit>(16).fill(0) as BitTuple<16>;
   for (let i = 0; i < _in.length; i++) {
-    _in[i] = not(_in[i]);
+    out[i] = not(_in[i]);
   }
 
-  return _in;
+  return out;
 }

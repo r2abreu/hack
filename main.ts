@@ -13,5 +13,13 @@ export { default as dmux8way } from "./dmux8way/dmux8way.ts";
 export { default as mux16 } from "./mux16/mux16.ts";
 export { default as mux4way16 } from "./mux4way16/mux4way16.ts";
 export { default as mux8way16 } from "./mux8way16/mux8way16.ts";
+export { default as half_adder } from "./half_adder/half_adder.ts";
+export { default as full_adder } from "./full_adder/full_adder.ts";
+export { default as inc16 } from "./inc16/inc16.ts";
+export { default as add16 } from "./add16/add16.ts";
+export { default as alu } from "./alu/alu.ts";
+export { default as dff } from "./dff/dff.ts";
+export { default as bit } from "./bit/bit.ts";
+export { default as register } from "./register/register.ts";
 
 export * from "./utility.ts";
