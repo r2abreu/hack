@@ -60,7 +60,7 @@ export default function (
   x: BitTuple<16>,
   y: BitTuple<16>,
   { zx, nx, zy, ny, f, no }: AluControlBits
-) {
+): { ng: bit; out: BitTuple<16>; zr: bit } {
   const zero = new Array<bit>(16).fill(0) as BitTuple<16>;
 
   if (zx) x = mux16(x, zero, zx);

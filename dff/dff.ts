@@ -17,7 +17,7 @@ import type { bit } from "../utility.ts";
  * It updates its output in sync with the system clock's tick/tock phases.
  */
 
-export default function () {
+export default function (): Record<string, bit> {
   let output: bit = 0;
   let next: bit = 0;
   let input: bit = 0;
