@@ -21,5 +21,6 @@ export { default as alu } from "./alu/alu.ts";
 export { default as dff } from "./dff/dff.ts";
 export { default as bit } from "./bit/bit.ts";
 export { default as register } from "./register/register.ts";
+export { default as ram8 } from "./ram8/ram8.ts"
 
 export * from "./utility.ts";

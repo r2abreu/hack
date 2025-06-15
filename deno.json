@@ -1,11 +1,14 @@
 {
   "name": "@r2/hack",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "license": "MIT",
   "exports": {
     ".": "./main.ts"
   },
   "publish": {
-    "exclude": ["*.test.ts"]
+    "exclude": ["*.test.ts", ".devcontainer"]
+  },
+  "fmt": {
+    "lineWidth": 80
   }
 }
