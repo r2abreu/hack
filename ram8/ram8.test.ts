@@ -1,130 +1,173 @@
 import { assertEquals } from "jsr:@std/assert";
-import ram8 from "./ram8.ts";
-import clock from "../clock/clock.ts";
+import RAM8 from "./ram8.ts";
 
-// Test 1: Write to address 0, read after clock
-Deno.test("RAM8: write and read at address 0", () => {
-  const ram = ram8();
-
-  // Write to address 0, output should be zeros before clock
-  assertEquals(
-    ram([1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1], 1, [0, 0, 0]),
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "Before clock, address 0 should output zeros",
-  );
-  clock.tick();
-  clock.tock();
-
-  // After clock, address 0 should output the written value
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0]),
-    [1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1],
-    "After clock, address 0 should output the written value",
-  );
+Deno.test("RAM8: outputs 0s initially at all addresses", () => {
+  const ram = RAM8();
+  ram.address = [0, 0, 0];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [0, 0, 1];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [0, 1, 0];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [0, 1, 1];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [1, 0, 0];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [1, 0, 1];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [1, 1, 0];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  ram.address = [1, 1, 1];
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 });
 
-// Test 2: Write to address 1, read after clock
-Deno.test("RAM8: write and read at address 1", () => {
-  const ram = ram8();
+Deno.test("RAM8: can load and read back at each address", () => {
+  const ram = RAM8();
 
-  // Write to address 1, output should be zeros before clock
-  assertEquals(
-    ram([0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0], 1, [0, 0, 1]),
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "Before clock, address 1 should output zeros",
-  );
-  clock.tick();
-  clock.tock();
+  // Write to all addresses
+  ram.address = [0, 0, 0];
+  ram.in = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
 
-  // After clock, address 1 should output the written value
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 1]),
-    [0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 0],
-    "After clock, address 1 should output the written value",
-  );
+  ram.address = [0, 0, 1];
+  ram.in = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [0, 1, 0];
+  ram.in = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [0, 1, 1];
+  ram.in = [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [1, 0, 0];
+  ram.in = [0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [1, 0, 1];
+  ram.in = [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [1, 1, 0];
+  ram.in = [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.address = [1, 1, 1];
+  ram.in = [1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  // Read back from all addresses
+  ram.load = 0;
+  ram.address = [0, 0, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+
+  ram.address = [0, 0, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]);
+
+  ram.address = [0, 1, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1]);
+
+  ram.address = [0, 1, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0]);
+
+  ram.address = [1, 0, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1]);
+
+  ram.address = [1, 0, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1]);
+
+  ram.address = [1, 1, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0]);
+
+  ram.address = [1, 1, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0]);
 });
 
-// Test 3: Write to address 7, read after clock
-Deno.test("RAM8: write and read at address 7", () => {
-  const ram = ram8();
+Deno.test("RAM8: writing at one address does not affect others", () => {
+  const ram = RAM8();
+  ram.address = [0, 1, 1];
+  ram.in = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
 
-  // Write to address 7, output should be zeros before clock
-  assertEquals(
-    ram([1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0], 1, [1, 1, 1]),
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "Before clock, address 7 should output zeros",
-  );
-  clock.tick();
-  clock.tock();
+  ram.load = 0;
+  ram.address = [0, 0, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-  // After clock, address 7 should output the written value
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [1, 1, 1]),
-    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-    "After clock, address 7 should output the written value",
-  );
+  ram.address = [0, 1, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+
+  ram.address = [1, 1, 1];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 });
 
-// Test 4: Read from an unwritten address (should be zeros)
-Deno.test("RAM8: read from unwritten address", () => {
-  const ram = ram8();
+Deno.test("RAM8: can overwrite a value at an address", () => {
+  const ram = RAM8();
+  ram.address = [1, 0, 0];
+  ram.in = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
 
-  // Read from address 2, never written
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 1, 0]),
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    "Unwritten address should output zeros",
-  );
+  ram.in = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  ram.load = 1;
+  ram.tick();
+  ram.tock();
+
+  ram.load = 0;
+  ram.address = [1, 0, 0];
+  ram.tick();
+  ram.tock();
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 });
 
-// Test 5: Overwrite address 0
-Deno.test("RAM8: overwrite at address 0", () => {
-  const ram = ram8();
-
-  // First write to address 0
-  ram([1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1], 1, [0, 0, 0]);
-  clock.tick();
-  clock.tock();
-
-  // Overwrite address 0, output should be previous value before clock
-  assertEquals(
-    ram([1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1], 1, [0, 0, 0]),
-    [1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1],
-    "Before clock, address 0 should output previous value",
-  );
-  clock.tick();
-  clock.tock();
-
-  // After clock, address 0 should output the new value
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0]),
-    [1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1],
-    "After clock, address 0 should output the overwritten value",
-  );
-});
-
-// Test 6: Write with load=0 should NOT overwrite
-Deno.test("RAM8: load=0 does not overwrite", () => {
-  const ram = ram8();
-
-  // Write to address 0
-  ram([1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1], 1, [0, 0, 0]);
-  clock.tick();
-  clock.tock();
-
-  // Try to write with load=0 (should not overwrite)
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0]),
-    [1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1],
-    "Load=0 should not overwrite address 0",
-  );
-  clock.tick();
-  clock.tock();
-
-  // After clock, address 0 should still output the previous value
-  assertEquals(
-    ram([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0, [0, 0, 0]),
-    [1, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1],
-    "After clock, address 0 should still output the previous value",
-  );
+Deno.test("RAM8: does not change output until tock", () => {
+  const ram = RAM8();
+  ram.address = [0, 0, 1];
+  ram.in = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  ram.load = 1;
+  ram.tick();
+  assertEquals(ram.value, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); // Output not updated yet
+  ram.tock();
+  assertEquals(ram.value, [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]); // Output updated after tock
 });

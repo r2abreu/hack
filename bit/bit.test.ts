@@ -1,52 +1,62 @@
 import { assertEquals } from "jsr:@std/assert";
-import Bit from "./bit.ts";
-import clock from "../clock/clock.ts"; // Adjust as needed
+import Bit from "./bit.ts"; // Adjust the import as needed
 
 Deno.test("Bit: outputs 0 initially", () => {
-  const bit = Bit();
-  assertEquals(bit(0, 0), 0);
-  assertEquals(bit(1, 0), 0);
+  const bit = Bit(0, 0);
+  assertEquals(bit.value, 0);
 });
 
 Deno.test("Bit: loads and stores a 1", () => {
-  const bit = Bit();
-  assertEquals(bit(1, 1), 0); // Set input=1, load=1, output still 0
-  clock.tick();
-  clock.tock();
-  assertEquals(bit(0, 0), 1); // Output updates to 1
+  const bit = Bit(0, 0);
+  assertEquals(bit.value, 0);
+
+  bit.in = 1;
+  bit.load = 1;
+  bit.tick();
+  bit.tock();
+
+  assertEquals(bit.value, 1);
 });
 
 Deno.test("Bit: holds value when load is 0", () => {
-  const bit = Bit();
-  bit(1, 1); // Prepare to store 1
-  clock.tick();
-  clock.tock();
-  assertEquals(bit(0, 0), 1); // Output is 1
+  const bit = Bit(0, 0);
 
-  bit(0, 0); // load=0, input=0, should not change
-  clock.tick();
-  clock.tock();
-  assertEquals(bit(0, 0), 1); // Output still 1
+  bit.in = 1;
+  bit.load = 1;
+  bit.tick();
+  bit.tock();
+  assertEquals(bit.value, 1);
+
+  bit.in = 0;
+  bit.load = 0;
+  bit.tick();
+  bit.tock();
+  assertEquals(bit.value, 1); // Should still hold the previous value
 });
 
 Deno.test("Bit: can reset to 0 when load is 1", () => {
-  const bit = Bit();
-  bit(1, 1);
-  clock.tick();
-  clock.tock();
-  assertEquals(bit(0, 0), 1);
+  const bit = Bit(0, 0);
 
-  bit(0, 1); // load=1, input=0, should store 0
-  clock.tick();
-  clock.tock();
-  assertEquals(bit(0, 0), 0);
+  bit.in = 1;
+  bit.load = 1;
+  bit.tick();
+  bit.tock();
+  assertEquals(bit.value, 1);
+
+  bit.in = 0;
+  bit.load = 1;
+  bit.tick();
+  bit.tock();
+  assertEquals(bit.value, 0);
 });
 
 Deno.test("Bit: does not change output until tock", () => {
-  const bit = Bit();
-  bit(1, 1);
-  clock.tick();
-  assertEquals(bit(0, 0), 0); // Output not updated yet
-  clock.tock();
-  assertEquals(bit(0, 0), 1); // Output updated after tock
+  const bit = Bit(0, 0);
+
+  bit.in = 1;
+  bit.load = 1;
+  bit.tick();
+  assertEquals(bit.value, 0); // Output not updated yet
+  bit.tock();
+  assertEquals(bit.value, 1); // Output updated after tock
 });

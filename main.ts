@@ -22,5 +22,11 @@ export { default as dff } from "./dff/dff.ts";
 export { default as bit } from "./bit/bit.ts";
 export { default as register } from "./register/register.ts";
 export { default as ram8 } from "./ram8/ram8.ts"
+export { default as ram64 } from "./ram64/ram64.ts"
+export { default as ram512 } from "./ram512/ram512.ts"
+export { default as ram4k } from "./ram4k/ram4k.ts"
+export { default as ram16k } from "./ram16k/ram16k.ts"
+export { default as pc } from "./pc/pc.ts"
+
 
 export * from "./utility.ts";

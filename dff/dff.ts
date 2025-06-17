@@ -1,4 +1,3 @@
-import clock from "../clock/clock.ts";
 import type { bit } from "../utility.ts";
 
 /**
@@ -17,12 +16,18 @@ import type { bit } from "../utility.ts";
  * It updates its output in sync with the system clock's tick/tock phases.
  */
 
-export default function (): Record<string, bit> {
+interface DFF {
+  value: bit;
+  tick: () => void;
+  tock: () => void;
+}
+
+export default function (): DFF {
   let output: bit = 0;
   let next: bit = 0;
   let input: bit = 0;
 
-  const obj = {
+  return {
     get value() {
       return output;
     },
@@ -30,15 +35,13 @@ export default function (): Record<string, bit> {
     set value(newVal: bit) {
       input = newVal;
     },
+
+    tick() {
+      next = input;
+    },
+
+    tock() {
+      output = next;
+    },
   };
-
-  clock.addEventListener("tick", () => {
-    next = input;
-  });
-
-  clock.addEventListener("tock", () => {
-    output = next;
-  });
-
-  return obj;
 }

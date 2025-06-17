@@ -1,5 +1,5 @@
 import Bit from "../bit/bit.ts";
-import type { BitTuple, bit } from "../utility.ts";
+import type { bit, BitTuple } from "../utility.ts";
 
 /**
  * @module Register
@@ -15,17 +15,46 @@ import type { BitTuple, bit } from "../utility.ts";
  * The Register chip is a 16-bit storage element built from 16 Bit chips.
  * It outputs the currently stored 16-bit value.
  */
-export default function (): (_in: BitTuple<16>, load: bit) => BitTuple<16> {
-  const bits = new Array(16).fill(null).map(() => Bit()) as Array<
-    ReturnType<typeof Bit>
-  >;
 
-  return function (_in: BitTuple<16>, load: bit) {
-    const out = new Array<bit>(16).fill(0) as BitTuple<16>;
-    for (let i = 0; i < 16; i++) {
-      out[i] = bits[i](_in[i], load);
-    }
+export interface Register {
+  in: BitTuple<16>;
+  value: BitTuple<16>;
+  load: bit;
+  tock: () => void;
+  tick: () => void;
+}
 
-    return out;
+export default function (): Register {
+  const bits = Array.from({ length: 16 }, () => Bit());
+
+  let input: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
+  let load: bit = 0;
+
+  return {
+    get in() {
+      return input;
+    },
+    set in(val: BitTuple<16>) {
+      input = val;
+    },
+    get load() {
+      return load;
+    },
+    set load(newVal) {
+      load = newVal;
+    },
+    get value() {
+      return bits.map((bit) => bit.value) as BitTuple<16>;
+    },
+    tick() {
+      for (let i = 0; i < bits.length; i++) {
+        bits[i].load = load;
+        bits[i].in = input[i];
+        bits[i].tick();
+      }
+    },
+    tock() {
+      for (const bit of bits) bit.tock();
+    },
   };
 }
