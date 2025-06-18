@@ -2,61 +2,62 @@ import { assertEquals } from "jsr:@std/assert";
 import dmux8way from "./dmux8way.ts";
 import type { bit } from "../utility.ts";
 
-Deno.test("dmux8way function", () => {
+Deno.test("dmux8way function (last bit is MSB)", () => {
   const _in: bit = 1;
-  // Test case 1: sel = [0, 0, 0], should route _in to the first output (index 0)
+
+  // sel = [0, 0, 0] => index 0
   assertEquals(
-    dmux8way(_in, [0, 0, 0]), // sel = [0, 0, 0]
-    [_in, 0, 0, 0, 0, 0, 0, 0], // _in goes to the first output
-    "dmux8way(sel=[0,0,0]) should route _in to the first output"
+    dmux8way(_in, [0, 0, 0]),
+    [_in, 0, 0, 0, 0, 0, 0, 0],
+    "sel=[0,0,0] routes _in to index 0",
   );
 
-  // Test case 2: sel = [0, 0, 1], should route _in to the second output (index 1)
+  // sel = [1, 0, 0] => index 1 (LSB is 1)
   assertEquals(
-    dmux8way(_in, [0, 0, 1]), // sel = [0, 0, 1]
-    [0, _in, 0, 0, 0, 0, 0, 0], // _in goes to the second output
-    "dmux8way(sel=[0,0,1]) should route _in to the second output"
+    dmux8way(_in, [1, 0, 0]),
+    [0, _in, 0, 0, 0, 0, 0, 0],
+    "sel=[1,0,0] routes _in to index 1",
   );
 
-  // Test case 3: sel = [0, 1, 0], should route _in to the third output (index 2)
+  // sel = [0, 1, 0] => index 2 (middle bit is 1)
   assertEquals(
-    dmux8way(_in, [0, 1, 0]), // sel = [0, 1, 0]
-    [0, 0, _in, 0, 0, 0, 0, 0], // _in goes to the third output
-    "dmux8way(sel=[0,1,0]) should route _in to the third output"
+    dmux8way(_in, [0, 1, 0]),
+    [0, 0, _in, 0, 0, 0, 0, 0],
+    "sel=[0,1,0] routes _in to index 2",
   );
 
-  // Test case 4: sel = [0, 1, 1], should route _in to the fourth output (index 3)
+  // sel = [1, 1, 0] => index 3 (1+2)
   assertEquals(
-    dmux8way(_in, [0, 1, 1]), // sel = [0, 1, 1]
-    [0, 0, 0, _in, 0, 0, 0, 0], // _in goes to the fourth output
-    "dmux8way(sel=[0,1,1]) should route _in to the fourth output"
+    dmux8way(_in, [1, 1, 0]),
+    [0, 0, 0, _in, 0, 0, 0, 0],
+    "sel=[1,1,0] routes _in to index 3",
   );
 
-  // Test case 5: sel = [1, 0, 0], should route _in to the fifth output (index 4)
+  // sel = [0, 0, 1] => index 4 (MSB is 1)
   assertEquals(
-    dmux8way(_in, [1, 0, 0]), // sel = [1, 0, 0]
-    [0, 0, 0, 0, _in, 0, 0, 0], // _in goes to the fifth output
-    "dmux8way(sel=[1,0,0]) should route _in to the fifth output"
+    dmux8way(_in, [0, 0, 1]),
+    [0, 0, 0, 0, _in, 0, 0, 0],
+    "sel=[0,0,1] routes _in to index 4",
   );
 
-  // Test case 6: sel = [1, 0, 1], should route _in to the sixth output (index 5)
+  // sel = [1, 0, 1] => index 5 (1+4)
   assertEquals(
-    dmux8way(_in, [1, 0, 1]), // sel = [1, 0, 1]
-    [0, 0, 0, 0, 0, _in, 0, 0], // _in goes to the sixth output
-    "dmux8way(sel=[1,0,1]) should route _in to the sixth output"
+    dmux8way(_in, [1, 0, 1]),
+    [0, 0, 0, 0, 0, _in, 0, 0],
+    "sel=[1,0,1] routes _in to index 5",
   );
 
-  // Test case 7: sel = [1, 1, 0], should route _in to the seventh output (index 6)
+  // sel = [0, 1, 1] => index 6 (2+4)
   assertEquals(
-    dmux8way(_in, [1, 1, 0]), // sel = [1, 1, 0]
-    [0, 0, 0, 0, 0, 0, _in, 0], // _in goes to the seventh output
-    "dmux8way(sel=[1,1,0]) should route _in to the seventh output"
+    dmux8way(_in, [0, 1, 1]),
+    [0, 0, 0, 0, 0, 0, _in, 0],
+    "sel=[0,1,1] routes _in to index 6",
   );
 
-  // Test case 8: sel = [1, 1, 1], should route _in to the eighth output (index 7)
+  // sel = [1, 1, 1] => index 7 (1+2+4)
   assertEquals(
-    dmux8way(_in, [1, 1, 1]), // sel = [1, 1, 1]
-    [0, 0, 0, 0, 0, 0, 0, _in], // _in goes to the eighth output
-    "dmux8way(sel=[1,1,1]) should route _in to the eighth output"
+    dmux8way(_in, [1, 1, 1]),
+    [0, 0, 0, 0, 0, 0, 0, _in],
+    "sel=[1,1,1] routes _in to index 7",
   );
 });

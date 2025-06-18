@@ -1,7 +1,5 @@
 import dmux4way from "../dmux4way/dmux4way.ts";
-import dmux8way from "../dmux8way/dmux8way.ts";
 import mux4way16 from "../mux4way16/mux4way16.ts";
-import mux8way16 from "../mux8way16/mux8way16.ts";
 import RAM4K from "../ram4k/ram4k.ts";
 import type { bit, BitTuple, Tuple } from "../utility.ts";
 

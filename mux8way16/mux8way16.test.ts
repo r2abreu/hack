@@ -12,139 +12,52 @@ Deno.test("mux8way16 function", () => {
   const G: BitTuple<16> = [1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1];
   const H: BitTuple<16> = [0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1];
 
-  // Test case 1: sel = [0, 0, 0], should return A
+  // sel = [0,0,0] => A
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [0, 0, 0] // sel = [0, 0, 0]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [0, 0, 0]),
     A,
-    "mux8way16(sel=[0,0,0]) should return A"
+    "mux8way16(sel=[0,0,0]) should return A",
   );
-
-  // Test case 2: sel = [0, 0, 1], should return B
+  // sel = [1,0,0] => B
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [0, 0, 1] // sel = [0, 0, 1]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [1, 0, 0]),
     B,
-    "mux8way16(sel=[0,0,1]) should return B"
+    "mux8way16(sel=[1,0,0]) should return B",
   );
-
-  // Test case 3: sel = [0, 1, 0], should return C
+  // sel = [0,1,0] => C
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [0, 1, 0] // sel = [0, 1, 0]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [0, 1, 0]),
     C,
-    "mux8way16(sel=[0,1,0]) should return C"
+    "mux8way16(sel=[0,1,0]) should return C",
   );
-
-  // Test case 4: sel = [0, 1, 1], should return D
+  // sel = [1,1,0] => D
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [0, 1, 1] // sel = [0, 1, 1]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [1, 1, 0]),
     D,
-    "mux8way16(sel=[0,1,1]) should return D"
+    "mux8way16(sel=[1,1,0]) should return D",
   );
-
-  // Test case 5: sel = [1, 0, 0], should return E
+  // sel = [0,0,1] => E
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [1, 0, 0] // sel = [1, 0, 0]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [0, 0, 1]),
     E,
-    "mux8way16(sel=[1,0,0]) should return E"
+    "mux8way16(sel=[0,0,1]) should return E",
   );
-
-  // Test case 6: sel = [1, 0, 1], should return F
+  // sel = [1,0,1] => F
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [1, 0, 1] // sel = [1, 0, 1]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [1, 0, 1]),
     F,
-    "mux8way16(sel=[1,0,1]) should return F"
+    "mux8way16(sel=[1,0,1]) should return F",
   );
-
-  // Test case 7: sel = [1, 1, 0], should return G
+  // sel = [0,1,1] => G
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [1, 1, 0] // sel = [1, 1, 0]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [0, 1, 1]),
     G,
-    "mux8way16(sel=[1,1,0]) should return G"
+    "mux8way16(sel=[0,1,1]) should return G",
   );
-
-  // Test case 8: sel = [1, 1, 1], should return H
+  // sel = [1,1,1] => H
   assertEquals(
-    mux8way16(
-      A,
-      B,
-      C,
-      D,
-      E,
-      F,
-      G,
-      H,
-      [1, 1, 1] // sel = [1, 1, 1]
-    ),
+    mux8way16(A, B, C, D, E, F, G, H, [1, 1, 1]),
     H,
-    "mux8way16(sel=[1,1,1]) should return H"
+    "mux8way16(sel=[1,1,1]) should return H",
   );
 });

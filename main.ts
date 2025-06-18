@@ -27,6 +27,7 @@ export { default as ram512 } from "./ram512/ram512.ts"
 export { default as ram4k } from "./ram4k/ram4k.ts"
 export { default as ram16k } from "./ram16k/ram16k.ts"
 export { default as pc } from "./pc/pc.ts"
+export { default as cpu } from "./cpu/cpu.ts"
 
 
 export * from "./utility.ts";

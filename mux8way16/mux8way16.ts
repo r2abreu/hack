@@ -26,15 +26,15 @@ export default function (
   f: BitTuple<16>,
   g: BitTuple<16>,
   h: BitTuple<16>,
-  sel: BitTuple<3>
+  sel: BitTuple<3>,
 ): BitTuple<16> {
   if (sel[0] === 0 && sel[1] === 0 && sel[2] === 0) return a;
-  if (sel[0] === 0 && sel[1] === 0 && sel[2] === 1) return b;
+  if (sel[0] === 1 && sel[1] === 0 && sel[2] === 0) return b;
   if (sel[0] === 0 && sel[1] === 1 && sel[2] === 0) return c;
-  if (sel[0] === 0 && sel[1] === 1 && sel[2] === 1) return d;
-  if (sel[0] === 1 && sel[1] === 0 && sel[2] === 0) return e;
+  if (sel[0] === 1 && sel[1] === 1 && sel[2] === 0) return d;
+  if (sel[0] === 0 && sel[1] === 0 && sel[2] === 1) return e;
   if (sel[0] === 1 && sel[1] === 0 && sel[2] === 1) return f;
-  if (sel[0] === 1 && sel[1] === 1 && sel[2] === 0) return g;
+  if (sel[0] === 0 && sel[1] === 1 && sel[2] === 1) return g;
 
-  return h;
+  return h; // (sel[0] === 1 && sel[1] === 1 && sel[2] === 1)
 }
