@@ -5,7 +5,7 @@ import not from "../not/not.ts";
 import not16 from "../not16/not16.ts";
 import or from "../or/or.ts";
 import or8way from "../or8way/or8way.ts";
-import type { BitTuple, bit } from "../utility.ts";
+import type { bit, BitTuple } from "../utility.ts";
 
 export interface AluControlBits {
   /** Zero the x input if 1 */
@@ -59,7 +59,7 @@ export interface AluControlBits {
 export default function (
   x: BitTuple<16>,
   y: BitTuple<16>,
-  { zx, nx, zy, ny, f, no }: AluControlBits
+  { zx, nx, zy, ny, f, no }: AluControlBits,
 ): { ng: bit; out: BitTuple<16>; zr: bit } {
   const zero = new Array<bit>(16).fill(0) as BitTuple<16>;
 

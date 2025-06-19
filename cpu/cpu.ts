@@ -198,8 +198,8 @@ export default class CPU {
   get writeM(): bit {
     return this.#writeM;
   }
-  get pc(): BitTuple<15> {
-    return this.#pc.value.slice(0, 15) as BitTuple<15>;
+  get pc(): BitTuple<16> {
+    return this.#pc.value;
   }
   get addressM(): BitTuple<15> {
     return this.#a.value.slice(0, 15) as BitTuple<15>;

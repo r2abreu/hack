@@ -86,6 +86,7 @@ Deno.test("resets program counter on reset", () => {
     0,
     0,
     0,
+    0,
   ]);
 });
 
@@ -97,6 +98,7 @@ Deno.test("increments program counter by default", () => {
   cpu.tock();
   assertEquals(cpu.pc, [
     1,
+    0,
     0,
     0,
     0,
@@ -418,6 +420,7 @@ Deno.test("C-instruction D;JGT causes jump when D>0", () => {
   // After jump, PC should be set to A (which was 1), so after one more tick/tock it should be 1
   assertEquals(cpu.pc, [
     1,
+    0,
     0,
     0,
     0,

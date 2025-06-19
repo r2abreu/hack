@@ -35,7 +35,7 @@ import type { bit, BitTuple, Tuple } from "../utility.ts";
  * let output = ram16k.value;
  */
 
-interface RAM64 {
+interface RAM16k {
   in: BitTuple<16>;
   load: bit;
   address: BitTuple<14>;
@@ -44,7 +44,7 @@ interface RAM64 {
   tick: () => void;
 }
 
-export default function (): RAM64 {
+export default function (): RAM16k {
   const rams = Array.from({ length: 4 }, () => RAM4K());
 
   let input: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
