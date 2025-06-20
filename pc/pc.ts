@@ -58,7 +58,7 @@ interface PC {
   inc: bit;
   reset: bit;
   in: BitTuple<16>;
-  value: BitTuple<16>
+  value: BitTuple<16>;
   tick: () => void;
   tock: () => void;
 }

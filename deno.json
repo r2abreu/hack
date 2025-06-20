@@ -1,12 +1,16 @@
 {
   "name": "@r2/hack",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "license": "MIT",
   "exports": {
     ".": "./main.ts"
   },
+  "tasks": {
+    "test": "deno test --allow-read",
+    "bench": "deno bench */bench/index.ts --allow-read"
+  },
   "publish": {
-    "exclude": ["*.test.ts", ".devcontainer"]
+    "exclude": ["*.test.ts", ".devcontainer", "**/bench/*"]
   },
   "fmt": {
     "lineWidth": 80

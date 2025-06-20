@@ -12,8 +12,10 @@ export default function (): (
     // the least significant bit first (different endianness).
     // Not good.
 
-    const instructionIndex = parseInt(instructionNumber.reverse().join(""), 2);
-    console.log(instructionIndex);
+    const instructionIndex = parseInt(
+      instructionNumber.toReversed().join(""),
+      2,
+    );
 
     const foo = rom[instructionIndex].trim().split("").reverse().map(
       Number,

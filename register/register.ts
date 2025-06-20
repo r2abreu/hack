@@ -1,4 +1,3 @@
-import Bit from "../bit/bit.ts";
 import type { bit, BitTuple } from "../utility.ts";
 
 /**
@@ -25,36 +24,36 @@ export interface Register {
 }
 
 export default function (): Register {
-  const bits = Array.from({ length: 16 }, () => Bit());
-
-  let input: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
+  const state: bit[] = Array(16).fill(0);
+  const next: bit[] = Array(16).fill(0);
+  let input: bit[] = Array(16).fill(0);
   let load: bit = 0;
 
   return {
     get in() {
-      return input;
+      return input as BitTuple<16>;
     },
-    set in(val: BitTuple<16>) {
+    set in(val) {
       input = val;
     },
     get load() {
       return load;
     },
-    set load(newVal) {
-      load = newVal;
+    set load(val) {
+      load = val;
     },
     get value() {
-      return bits.map((bit) => bit.value) as BitTuple<16>;
+      return state as BitTuple<16>;
     },
     tick() {
-      for (let i = 0; i < bits.length; i++) {
-        bits[i].load = load;
-        bits[i].in = input[i];
-        bits[i].tick();
+      if (load) {
+        for (let i = 0; i < 16; i++) next[i] = input[i];
+      } else {
+        for (let i = 0; i < 16; i++) next[i] = state[i];
       }
     },
     tock() {
-      for (const bit of bits) bit.tock();
+      for (let i = 0; i < 16; i++) state[i] = next[i];
     },
   };
 }
