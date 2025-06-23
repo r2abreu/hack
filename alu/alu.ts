@@ -5,30 +5,30 @@ import not from "../not/not.ts";
 import not16 from "../not16/not16.ts";
 import or from "../or/or.ts";
 import or8way from "../or8way/or8way.ts";
-import type { bit, BitTuple } from "../utility.ts";
+import { index, sliceBits } from "../utility.ts";
 
 export interface AluControlBits {
   /** Zero the x input if 1 */
-  zx: bit;
+  zx: number;
   /** Negate the x input if 1 */
-  nx: bit;
+  nx: number;
   /** Zero the y input if 1 */
-  zy: bit;
+  zy: number;
   /** Negate the y input if 1 */
-  ny: bit;
+  ny: number;
   /** Function code: 1 for Add, 0 for And */
-  f: bit;
+  f: number;
   /** Negate the output if 1 */
-  no: bit;
+  no: number;
 }
 
 /**
  * @module ALU
  *
- * @param {BitTuple<16>} x - 16-bit input
- * @param {BitTuple<16>} y - 16-bit input
+ * @param {number} x - 16-bit input (as a number; only the lowest 16 bits are used)
+ * @param {number} y - 16-bit input (as a number; only the lowest 16 bits are used)
  * @param {AluControlBits} control_bits - Object containing all ALU control bits
- * @returns {{out: BitTuple<16>, zr: bit, ng: bit}}
+ * @returns {{out: number, zr: 0|1, ng: 0|1}}
  *
  * | zx | nx | zy | ny |  f | no | Output        | Description           |
  * |----|----|----|----|----|----|--------------|----------------------|
@@ -51,34 +51,32 @@ export interface AluControlBits {
  * | 0  | 0  | 0  | 0  | 0  | 0  |   x & y      | Bitwise and          |
  * | 0  | 1  | 0  | 1  | 0  | 1  |   x \| y     | Bitwise or           |
  *
- * The ALU computes a 16-bit output (out) and two status flags:
- *   - zr: 1 if out == 0, else 0
- *   - ng: 1 if out < 0 (in two's complement), else 0
+ * The ALU computes a 16-bit output (`out`) and two status flags:
+ *   - `zr`: 1 if out == 0, else 0
+ *   - `ng`: 1 if out < 0 (in two's complement), else 0
  */
 
 export default function (
-  x: BitTuple<16>,
-  y: BitTuple<16>,
+  x: number,
+  y: number,
   { zx, nx, zy, ny, f, no }: AluControlBits,
-): { ng: bit; out: BitTuple<16>; zr: bit } {
-  const zero = new Array<bit>(16).fill(0) as BitTuple<16>;
-
-  if (zx) x = mux16(x, zero, zx);
+): { ng: number; out: number; zr: number } {
+  if (zx) x = mux16(x, 0, zx);
   if (nx) x = not16(x);
-  if (zy) y = mux16(y, zero, zy);
+  if (zy) y = mux16(y, 0, zy);
   if (ny) y = not16(y);
 
   const operation_result = f ? add16(x, y) : and16(x, y);
   const not_operation_result = not16(operation_result);
   const out = mux16(operation_result, not_operation_result, no);
 
-  const first_or = or8way(out.slice(0, 7) as BitTuple<8>);
-  const second_or = or8way(out.slice(8) as BitTuple<8>);
+  const first_or = or8way(sliceBits(out, 0, 7));
+  const second_or = or8way(sliceBits(out, 8, 8));
   const last_or = or(first_or, second_or);
   const zr = not(last_or);
 
   return {
-    ng: out[15],
+    ng: index(out, 15),
     out,
     zr,
   };

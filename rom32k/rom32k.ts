@@ -1,26 +1,21 @@
-import type { BitTuple } from "../utility.ts";
-
-export default function (): (
-  address: BitTuple<16>,
-) => BitTuple<16> | undefined {
+/**
+ * 32,768-register (16-bit) read-only memory (ROM32K).
+ *
+ * - 15-bit address selects one of 32,768 registers.
+ * - Returns the 16-bit value stored at the given address, or undefined if out of range.
+ * - Contents are fixed at initialization (read-only).
+ *
+ * @param {number} address - 15-bit address (0 to 32767)
+ * @returns {number | undefined} - 16-bit data output (binary number) or undefined if invalid address
+ */
+export default function rom32k(): (
+  address: number,
+) => number | undefined {
   const rom = Deno.readTextFileSync(`${import.meta.dirname}/instructions.txt`)
     .split("\n");
 
   return (instructionNumber) => {
-    // Note: We reverse the address bits here because JavaScript arrays are typically
-    // indexed with the most significant bit first, while Hack instructions expect
-    // the least significant bit first (different endianness).
-    // Not good.
-
-    const instructionIndex = parseInt(
-      instructionNumber.toReversed().join(""),
-      2,
-    );
-
-    const foo = rom[instructionIndex].trim().split("").reverse().map(
-      Number,
-    ) as unknown as BitTuple<16>;
-
+    const foo = parseInt(rom[instructionNumber], 2);
     return foo;
   };
 }

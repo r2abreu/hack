@@ -1,25 +1,23 @@
-import mux from "../mux/mux.ts";
-import type { BitTuple, bit } from "../utility.ts";
+import and16 from "../and16/and16.ts";
+import or16 from "../or16/or16.ts";
+import { mask } from "../utility.ts";
 
 /**
- * @module MUX
+ * @module mux16
  *
- * @param {BitTuple<16>} a
- * @param {BitTuple<16>} b
- * @returns {BitTuple<16>}
+ * @param {number} a - First 16-bit input (binary number)
+ * @param {number} b - Second 16-bit input (binary number)
+ * @param {number} sel - Selector bit (0 or 1)
+ * @returns {number} - 16-bit output (binary number)
  *
- * Input: a[16], b[16], sel
- * Output: out[16]
- * Function: for i = 0..15 out[i] = Mux(a[i], b[i])
+ * Returns a if sel is 0, b if sel is 1.
  */
-export default function (
-  a: BitTuple<16>,
-  b: BitTuple<16>,
-  sel: bit
-): BitTuple<16> {
-  const out: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
+export default function mux16(a: number, b: number, sel: number): number {
+  const _sel = mask(sel ? 0b1111111111111111 : 0);
+  const notsel = ~_sel;
 
-  for (let i = 0; i < 16; i++) out[i] = mux(a[i], b[i], sel);
+  const lh = and16(_sel, b);
+  const rh = and16(notsel, a);
 
-  return out;
+  return or16(lh, rh);
 }

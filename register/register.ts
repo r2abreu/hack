@@ -1,37 +1,34 @@
-import type { bit, BitTuple } from "../utility.ts";
-
-/**
- * @module Register
- *
- * @returns {function(in: BitTuple<16>, load: bit): BitTuple<16>} Register - 16-bit register function
- *
- * Input:  in[16] (BitTuple<16>), load (bit)
- * Output: out[16] (BitTuple<16>)
- * Function:
- *   If load == 1, stores `in` on next clock cycle.
- *   If load == 0, preserves previous value.
- *
- * The Register chip is a 16-bit storage element built from 16 Bit chips.
- * It outputs the currently stored 16-bit value.
- */
-
 export interface Register {
-  in: BitTuple<16>;
-  value: BitTuple<16>;
-  load: bit;
+  in: number;
+  value: number;
+  load: number;
   tock: () => void;
   tick: () => void;
 }
 
-export default function (): Register {
-  const state: bit[] = Array(16).fill(0);
-  const next: bit[] = Array(16).fill(0);
-  let input: bit[] = Array(16).fill(0);
-  let load: bit = 0;
+/**
+ * 16-bit register (storage element).
+ *
+ * - Stores a 16-bit value (binary number).
+ * - On tick(), loads input value if load is 1; otherwise holds current value.
+ * - On tock(), updates output to current state.
+ *
+ * @interface Register
+ * @property {number} in - 16-bit data input (binary number)
+ * @property {number} load - Load signal (1: store input, 0: preserve)
+ * @property {number} value - 16-bit data output (binary number)
+ * @property {function} tick - Latch input if load is 1
+ * @property {function} tock - Update output to reflect current state
+ */
+export default function register(): Register {
+  let state = 0;
+  let next = 0;
+  let input = 0;
+  let load = 0;
 
   return {
     get in() {
-      return input as BitTuple<16>;
+      return input;
     },
     set in(val) {
       input = val;
@@ -43,17 +40,17 @@ export default function (): Register {
       load = val;
     },
     get value() {
-      return state as BitTuple<16>;
+      return state;
     },
     tick() {
       if (load) {
-        for (let i = 0; i < 16; i++) next[i] = input[i];
+        next = input;
       } else {
-        for (let i = 0; i < 16; i++) next[i] = state[i];
+        next = state;
       }
     },
     tock() {
-      for (let i = 0; i < 16; i++) state[i] = next[i];
+      state = next;
     },
   };
 }

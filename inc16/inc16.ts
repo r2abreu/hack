@@ -1,21 +1,14 @@
-import type { BitTuple } from "../utility.ts";
 import add16 from "../add16/add16.ts";
 
 /**
- * @module INC16
+ * @module inc16
  *
- * @param {BitTuple<16>} in - 16-bit input tuple
- * @returns {BitTuple<16>} out - 16-bit output tuple
+ * @param {number} _in - a 16-bit binary number to increment
+ * @returns {number} - the result of adding 1 to the input (as a 16-bit binary number)
  *
- * Input: in[16]
- * Output: out[16]
- * Function: out = in + 1 (binary increment, ignoring overflow)
- *
- * The INC16 module increments a 16-bit input by 1, returning the result as a 16-bit tuple.
+ * The inc16 function returns the input value incremented by one.
+ * it uses add16 to perform the addition.
  */
-
-export default function (_in: BitTuple<16>): BitTuple<16> {
-  const one: BitTuple<16> = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  return add16(_in, one);
+export default function inc16(_in: number): number {
+  return add16(_in, 0b01);
 }

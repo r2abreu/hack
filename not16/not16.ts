@@ -1,21 +1,13 @@
-import not from "../not/not.ts";
-import type { BitTuple, bit } from "../utility.ts";
+import { mask } from "../utility.ts";
 
 /**
- * @module NOT16
+ * @module not16
  *
- * @param {BitTuple<16>} _in
- * @returns {BitTuple<16>}
+ * @param {number} _in - 16-bit input (binary number)
+ * @returns {number} - 16-bit output (binary number)
  *
- * Input: _in[16]
- * Output: out[16]
- * Function: for i = 0..15 out[i] = Not(_in[i])
+ * Returns the bitwise NOT of the 16-bit input.
  */
-export default function (_in: BitTuple<16>): BitTuple<16> {
-  const out = new Array<bit>(16).fill(0) as BitTuple<16>;
-  for (let i = 0; i < _in.length; i++) {
-    out[i] = not(_in[i]);
-  }
-
-  return out;
+export default function not16(_in: number): number {
+  return mask(~_in);
 }

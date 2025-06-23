@@ -1,40 +1,51 @@
-import type { BitTuple } from "../utility.ts";
+import { index, mask } from "../utility.ts";
 
 /**
  * @module MUX8WAY16
  *
- * @param {BitTuple<16>} a
- * @param {BitTuple<16>} b
- * @param {BitTuple<16>} c
- * @param {BitTuple<16>} d
- * @param {BitTuple<16>} e
- * @param {BitTuple<16>} f
- * @param {BitTuple<16>} g
- * @param {BitTuple<16>} h
- * @param {BitTuple<3>} sel
- * @returns {bit}
+ * @param {number} a - First 16-bit input (binary number)
+ * @param {number} b - Second 16-bit input (binary number)
+ * @param {number} c - Third 16-bit input (binary number)
+ * @param {number} d - Fourth 16-bit input (binary number)
+ * @param {number} e - Fifth 16-bit input (binary number)
+ * @param {number} f - Sixth 16-bit input (binary number)
+ * @param {number} g - Seventh 16-bit input (binary number)
+ * @param {number} h - Eighth 16-bit input (binary number)
+ * @param {number} sel - 3-bit selector (binary number, 0 to 7)
+ * @returns {number} - 16-bit output (binary number)
  *
- * Input: a[16], b[16], c[16], d[16], sel[3]
- * Output: out[16]
+ * Selects and returns one of the eight 16-bit inputs based on sel.
  */
-export default function (
-  a: BitTuple<16>,
-  b: BitTuple<16>,
-  c: BitTuple<16>,
-  d: BitTuple<16>,
-  e: BitTuple<16>,
-  f: BitTuple<16>,
-  g: BitTuple<16>,
-  h: BitTuple<16>,
-  sel: BitTuple<3>,
-): BitTuple<16> {
-  if (sel[0] === 0 && sel[1] === 0 && sel[2] === 0) return a;
-  if (sel[0] === 1 && sel[1] === 0 && sel[2] === 0) return b;
-  if (sel[0] === 0 && sel[1] === 1 && sel[2] === 0) return c;
-  if (sel[0] === 1 && sel[1] === 1 && sel[2] === 0) return d;
-  if (sel[0] === 0 && sel[1] === 0 && sel[2] === 1) return e;
-  if (sel[0] === 1 && sel[1] === 0 && sel[2] === 1) return f;
-  if (sel[0] === 0 && sel[1] === 1 && sel[2] === 1) return g;
+export default function mux8way16(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  e: number,
+  f: number,
+  g: number,
+  h: number,
+  sel: number,
+): number {
+  const _a = mask(a);
+  const _b = mask(b);
+  const _c = mask(c);
+  const _d = mask(d);
+  const _e = mask(e);
+  const _f = mask(f);
+  const _g = mask(g);
+  const _h = mask(h);
+  const _sel = mask(sel);
 
-  return h; // (sel[0] === 1 && sel[1] === 1 && sel[2] === 1)
+  if ((1 - index(_sel, 2)) & (1 - index(_sel, 1)) & (1 - index(_sel, 0))) {
+    return _a;
+  }
+  if ((1 - index(_sel, 2)) & (1 - index(_sel, 1)) & index(_sel, 0)) return _b;
+  if ((1 - index(_sel, 2)) & index(_sel, 1) & (1 - index(_sel, 0))) return _c;
+  if ((1 - index(_sel, 2)) & index(_sel, 1) & index(_sel, 0)) return _d;
+  if (index(_sel, 2) & (1 - index(_sel, 1)) & (1 - index(_sel, 0))) return _e;
+  if (index(_sel, 2) & (1 - index(_sel, 1)) & index(_sel, 0)) return _f;
+  if (index(_sel, 2) & index(_sel, 1) & (1 - index(_sel, 0))) return _g;
+
+  return _h; // (sel[0] === 1 && sel[1] === 1 && sel[2] === 1)
 }

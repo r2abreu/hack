@@ -1,30 +1,22 @@
-import type { BitTuple, bit } from "../utility.ts";
-import full_adder from "../full_adder/full_adder.ts";
+import { mask } from "../utility.ts";
 
 /**
- * @module ADD16
+ * Adds two numbers and returns the sum masked to the lowest 16 bits.
  *
- * @param {BitTuple<16>} a - First 16-bit input tuple
- * @param {BitTuple<16>} b - Second 16-bit input tuple
- * @returns {BitTuple<16>} sum - 16-bit sum output tuple
+ * Both input numbers are first masked to 16 bits, then added together.
+ * The result is also masked to ensure the return value is a 16-bit number.
  *
- * Input: a[16], b[16]
- * Output: sum[16]
- * Function: for i = 0..15, sum = a + b (binary addition, ignoring overflow)
+ * @param {number} a - The first operand. Only the least significant 16 bits are used.
+ * @param {number} b - The second operand. Only the least significant 16 bits are used.
+ * @returns {number} The 16-bit masked sum of the two operands.
  *
- * The ADD16 module computes the bitwise sum of two 16-bit inputs, returning a 16-bit tuple representing the result.
+ * @example
+ * add16(0b0000000000000010, 0b0000000000000011); // 0b0000000000000101 (5)
+ * add16(0xFFFF, 1); // 0x0000 (0), because (0xFFFF + 1) & 0xFFFF === 0
  */
+export default function (a: number, b: number): number {
+  const _a = mask(a);
+  const _b = mask(b);
 
-export default function (a: BitTuple<16>, b: BitTuple<16>): BitTuple<16> {
-  const out = new Array<bit>(16).fill(0) as BitTuple<16>;
-
-  let carry: bit = 0;
-  for (let i = 0; i < 16; i++) {
-    const [_carry, sum] = full_adder(a[i], b[i], carry);
-
-    carry = _carry;
-    out[i] = sum;
-  }
-
-  return out;
+  return mask(a + b);
 }

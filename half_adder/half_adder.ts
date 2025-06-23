@@ -1,26 +1,25 @@
-import type { bit, BitTuple } from "../utility.ts";
 import xor from "../xor/xor.ts";
 import and from "../and/and.ts";
 
 /**
- * @module HalfAdder
+ * @module halfadder
  *
- * @param {bit} a - First input bit
- * @param {bit} b - Second input bit
- * @returns {[bit, bit]} [carry, sum]
+ * @param {number} a - first input bit (0 or 1)
+ * @param {number} b - second input bit (0 or 1)
+ * @returns {number[]} [carry, sum] - both are binary numbers (0 or 1)
  *
- * | A | B | CARRY | SUM |
+ * | a | b | carry | sum |
  * |---|---|:-----:|:---:|
  * | 0 | 0 |   0   |  0  |
  * | 0 | 1 |   0   |  1  |
  * | 1 | 0 |   0   |  1  |
  * | 1 | 1 |   1   |  0  |
  *
- * The HalfAdder computes the carry-out and sum of two single-bit inputs.
- * Returns a tuple: [carry, sum].
+ * the halfadder computes the carry-out and sum of two single-bit binary inputs.
+ * returns an array: [carry, sum].
  */
 
-export default function (a: bit, b: bit): BitTuple<2> {
+export default function half_adder(a: number, b: number): [number, number] {
   const carry = and(a, b);
   const sum = xor(a, b);
 

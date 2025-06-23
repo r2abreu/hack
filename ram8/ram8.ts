@@ -1,7 +1,7 @@
 import dmux8way from "../dmux8way/dmux8way.ts";
 import mux8way16 from "../mux8way16/mux8way16.ts";
 import Register from "../register/register.ts";
-import type { bit, BitTuple, Tuple } from "../utility.ts";
+import type { Tuple } from "../utility.ts";
 
 /**
  * @module RAM8
@@ -30,10 +30,10 @@ import type { bit, BitTuple, Tuple } from "../utility.ts";
  */
 
 interface RAM8 {
-  in: BitTuple<16>;
-  load: bit;
-  address: BitTuple<3>;
-  value: BitTuple<16>;
+  in: number;
+  load: number;
+  address: number;
+  value: number;
   tock: () => void;
   tick: () => void;
 }
@@ -41,9 +41,9 @@ interface RAM8 {
 export default function (): RAM8 {
   const registers = Array.from({ length: 8 }, () => Register());
 
-  let input: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
-  let load: bit = 0;
-  let address: BitTuple<3> = Array(3).fill(0) as BitTuple<3>;
+  let input = 0;
+  let load = 0;
+  let address = 0;
 
   return {
     get load() {
@@ -61,7 +61,7 @@ export default function (): RAM8 {
     get in() {
       return input;
     },
-    set in(val: BitTuple<16>) {
+    set in(val: number) {
       input = val;
     },
     get value() {

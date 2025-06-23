@@ -1,17 +1,17 @@
-import type { bit } from "../utility.ts";
-
 /**
- * @module NOT
+ * @module not
  *
- * @param {bit} _in
- * @returns {bit}
+ * @param {number} _in - Input bit (0 or 1)
+ * @returns {number} - Output bit (0 or 1)
  *
- * | A | NOT A |
+ * | a | not a |
  * |---|:-----:|
- * | 0 | 1 |
- * | 1 | 0 |
+ * | 0 |   1   |
+ * | 1 |   0   |
+ *
+ * Returns the bitwise NOT of the input.
  */
-export default function (_in: bit): bit {
+export default function not(_in: number): number {
   if (_in === 1) return 0;
   else return 1;
 }

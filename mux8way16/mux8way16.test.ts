@@ -1,63 +1,76 @@
 import { assertEquals } from "jsr:@std/assert";
 import mux8way16 from "./mux8way16.ts";
-import type { BitTuple } from "../utility.ts";
 
-Deno.test("mux8way16 function", () => {
-  const A: BitTuple<16> = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
-  const B: BitTuple<16> = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
-  const C: BitTuple<16> = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  const D: BitTuple<16> = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const E: BitTuple<16> = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const F: BitTuple<16> = [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  const G: BitTuple<16> = [1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1];
-  const H: BitTuple<16> = [0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1];
+// Use 16-bit numbers as inputs
+const A = 0b1010101010101010;
+const B = 0b0101010101010101;
+const C = 0b1111111111111111;
+const D = 0b0000000000000000;
+const E = 0b1000000000000000;
+const F = 0b0111111111111111;
+const G = 0b1100001110001101;
+const H = 0b0011011001011101;
 
-  // sel = [0,0,0] => A
+Deno.test("mux8way16: sel=0b000 should return A", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [0, 0, 0]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b000),
     A,
-    "mux8way16(sel=[0,0,0]) should return A",
+    "mux8way16(sel=0b000) should return A",
   );
-  // sel = [1,0,0] => B
+});
+
+Deno.test("mux8way16: sel=0b001 should return B", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [1, 0, 0]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b001),
     B,
-    "mux8way16(sel=[1,0,0]) should return B",
+    "mux8way16(sel=0b001) should return B",
   );
-  // sel = [0,1,0] => C
+});
+
+Deno.test("mux8way16: sel=0b010 should return C", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [0, 1, 0]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b010),
     C,
-    "mux8way16(sel=[0,1,0]) should return C",
+    "mux8way16(sel=0b010) should return C",
   );
-  // sel = [1,1,0] => D
+});
+
+Deno.test("mux8way16: sel=0b011 should return D", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [1, 1, 0]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b011),
     D,
-    "mux8way16(sel=[1,1,0]) should return D",
+    "mux8way16(sel=0b011) should return D",
   );
-  // sel = [0,0,1] => E
+});
+
+Deno.test("mux8way16: sel=0b100 should return E", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [0, 0, 1]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b100),
     E,
-    "mux8way16(sel=[0,0,1]) should return E",
+    "mux8way16(sel=0b100) should return E",
   );
-  // sel = [1,0,1] => F
+});
+
+Deno.test("mux8way16: sel=0b101 should return F", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [1, 0, 1]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b101),
     F,
-    "mux8way16(sel=[1,0,1]) should return F",
+    "mux8way16(sel=0b101) should return F",
   );
-  // sel = [0,1,1] => G
+});
+
+Deno.test("mux8way16: sel=0b110 should return G", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [0, 1, 1]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b110),
     G,
-    "mux8way16(sel=[0,1,1]) should return G",
+    "mux8way16(sel=0b110) should return G",
   );
-  // sel = [1,1,1] => H
+});
+
+Deno.test("mux8way16: sel=0b111 should return H", () => {
   assertEquals(
-    mux8way16(A, B, C, D, E, F, G, H, [1, 1, 1]),
+    mux8way16(A, B, C, D, E, F, G, H, 0b111),
     H,
-    "mux8way16(sel=[1,1,1]) should return H",
+    "mux8way16(sel=0b111) should return H",
   );
 });

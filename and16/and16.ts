@@ -1,21 +1,17 @@
-import and from "../and/and.ts";
-import type { BitTuple } from "../utility.ts";
+import { mask } from "../utility.ts";
 
-/**
+/*
  * @module AND16
  *
- * @param {BitTuple<16>} a
- * @param {BitTuple<16>} b
- * @returns {BitTuple<16>}
+ * Bitwise AND of two 16-bit numbers.
  *
- * Input: a[16], b[16]
- * Output: out[16]
- * Function: for i = 0..15 out[i] = And(a[i], b[i])
+ * @param {number} a - First 16-bit input (only lowest 16 bits used)
+ * @param {number} b - Second 16-bit input (only lowest 16 bits used)
+ * @returns {number} 16-bit result of a & b
+ *
+ * @example
+ * AND16(0b1010, 0b1100); // 0b1000
  */
-export default function (a: BitTuple<16>, b: BitTuple<16>): BitTuple<16> {
-  const out: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
-
-  for (let i = 0; i < 16; i++) out[i] = and(a[i], b[i]);
-
-  return out;
+export default function and16(a: number, b: number): number {
+  return mask(a & b);
 }

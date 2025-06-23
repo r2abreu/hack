@@ -1,16 +1,15 @@
-import type { bit, BitTuple } from "../utility.ts";
 import or from "../or/or.ts";
 import half_adder from "../half_adder/half_adder.ts";
 
 /**
- * @module FullAdder
+ * @module full_adder
  *
- * @param {bit} a - First input bit
- * @param {bit} b - Second input bit
- * @param {bit} c - Carry-in bit
- * @returns {[bit, bit]} [carry, sum]
+ * @param {number} a - first input bit (0 or 1)
+ * @param {number} b - second input bit (0 or 1)
+ * @param {number} c - carry-in bit (0 or 1)
+ * @returns {number[]} [carry, sum] - both are binary numbers (0 or 1)
  *
- * | A | B | C | CARRY | SUM |
+ * | a | b | c | carry | sum |
  * |---|---|---|:-----:|:---:|
  * | 0 | 0 | 0 |   0   |  0  |
  * | 0 | 0 | 1 |   0   |  1  |
@@ -21,11 +20,15 @@ import half_adder from "../half_adder/half_adder.ts";
  * | 1 | 1 | 0 |   1   |  0  |
  * | 1 | 1 | 1 |   1   |  1  |
  *
- * The FullAdder computes the carry-out and sum of three single-bit inputs (a, b, c).
- * Returns a tuple: [carry, sum].
+ * the full_adder computes the carry-out and sum of three single-bit binary inputs (a, b, c).
+ * returns an array: [carry, sum].
  */
 
-export default function (a: bit, b: bit, c: bit): BitTuple<2> {
+export default function full_adder(
+  a: number,
+  b: number,
+  c: number,
+): [number, number] {
   const [ab_carry, ab_sum] = half_adder(a, b);
   const [abc_carry, sum] = half_adder(ab_sum, c);
   const carry = or(ab_carry, abc_carry);

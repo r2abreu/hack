@@ -1,21 +1,14 @@
-import or from "../or/or.ts";
-import type { BitTuple } from "../utility.ts";
+import { mask } from "../utility.ts";
 
 /**
- * @module OR16
+ * @module or16
  *
- * @param {BitTuple<16>} a
- * @param {BitTuple<16>} b
- * @returns {BitTuple<16>}
+ * @param {number} a - First 16-bit input (binary number)
+ * @param {number} b - Second 16-bit input (binary number)
+ * @returns {number} - 16-bit output (binary number)
  *
- * Input: a[16], b[16]
- * Output: out[16]
- * Function: for i = 0..15 out[i] = Or(a[i], b[i])
+ * Returns the bitwise OR of the two 16-bit inputs.
  */
-export default function (a: BitTuple<16>, b: BitTuple<16>): BitTuple<16> {
-  const out: BitTuple<16> = Array(16).fill(0) as BitTuple<16>;
-
-  for (let i = 0; i < 16; i++) out[i] = or(a[i], b[i]);
-
-  return out;
+export default function or16(a: number, b: number): number {
+  return mask(a | b);
 }

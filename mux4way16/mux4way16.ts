@@ -1,28 +1,35 @@
-import type { BitTuple } from "../utility.ts";
+import { index, mask } from "../utility.ts";
 
 /**
  * @module MUX4WAY16
  *
- * @param {BitTuple<16>} a
- * @param {BitTuple<16>} b
- * @param {BitTuple<16>} c
- * @param {BitTuple<16>} d
- * @param {BitTuple<2>} sel
- * @returns {bit}
+ * @param {number} a - First 16-bit input (binary number)
+ * @param {number} b - Second 16-bit input (binary number)
+ * @param {number} c - Third 16-bit input (binary number)
+ * @param {number} d - Fourth 16-bit input (binary number)
+ * @param {number} sel - 2-bit selector (binary number, 0 to 3)
+ * @returns {number} - 16-bit output (binary number)
  *
- * Input: a[16], b[16], c[16], d[16], sel[2]
- * Output: out[16]
+ * Selects and returns one of the four 16-bit inputs based on sel.
  */
-export default function (
-  a: BitTuple<16>,
-  b: BitTuple<16>,
-  c: BitTuple<16>,
-  d: BitTuple<16>,
-  sel: BitTuple<2>
-): BitTuple<16> {
-  if (sel[0] === 0 && sel[1] === 0) return a;
-  if (sel[0] === 0 && sel[1] === 1) return b;
-  if (sel[0] === 1 && sel[1] === 0) return c;
+export default function mux4way16(
+  a: number,
+  b: number,
+  c: number,
+  d: number,
+  sel: number,
+): number {
+  const _a = mask(a);
+  const _b = mask(b);
+  const _c = mask(c);
+  const _d = mask(d);
+  const _sel = mask(sel);
 
-  return d;
+  const s0 = index(_sel, 0);
+  const s1 = index(_sel, 1);
+
+  if ((1 - s0) & (1 - s1)) return _a; // 00
+  if ((1 - s1) & s0) return _b; // 01
+  if (s1 & (1 - s0)) return _c; // 10
+  return _d; // 11
 }
