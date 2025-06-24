@@ -1,33 +1,8 @@
+
 import dmux8way from "../dmux8way/dmux8way.ts";
 import mux8way16 from "../mux8way16/mux8way16.ts";
 import Register from "../register/register.ts";
 import type { Tuple } from "../utility.ts";
-
-/**
- * @module RAM8
- *
- * @returns {function(
- *   in: BitTuple<16>,
- *   load: bit,
- *   address: BitTuple<3>
- * ): BitTuple<16>} RAM8 - 8-register (16-bit each) memory function
- *
- * Input:
- *   in[16]    (BitTuple<16>) - 16-bit data input
- *   load      (bit)          - Load signal
- *   address[3] (BitTuple<3>) - 3-bit address selector (0-7)
- *
- * Output:
- *   out[16]   (BitTuple<16>) - 16-bit data output from selected register
- *
- * Function:
- *   - The RAM8 chip consists of 8 registers, each 16 bits wide.
- *   - When `load == 1`, the value of `in` is stored into the register selected by `address` on the next clock cycle.
- *   - When `load == 0`, the selected register preserves its previous value.
- *   - The output always reflects the value stored in the register selected by `address`.
- *
- * The RAM8 chip provides a simple 8-word, 16-bit wide random-access memory, built from 8 Register chips.
- */
 
 interface RAM8 {
   in: number;
@@ -38,7 +13,23 @@ interface RAM8 {
   tick: () => void;
 }
 
-export default function (): RAM8 {
+/**
+ * 8-register (16-bit) random-access memory chip.
+ *
+ * - 3-bit address selects one of 8 registers.
+ * - 16-bit input and output values (binary numbers).
+ * - Call tick() to latch input if load is 1; tock() to update output[1][3][6].
+ *
+ * @interface RAM8
+ * @property {number} in - 16-bit data input (binary number)
+ * @property {number} load - Load signal (1: store input, 0: preserve)
+ * @property {number} address - 3-bit address (binary number, 0 to 7)
+ * @property {number} value - 16-bit data output (binary number)
+ * @property {function} tick - Latch input if load is 1
+ * @property {function} tock - Update output to reflect current state
+ */
+
+export default function ram8(): RAM8 {
   const registers = Array.from({ length: 8 }, () => Register());
 
   let input = 0;
@@ -73,14 +64,12 @@ export default function (): RAM8 {
     },
     tick() {
       const dmux = dmux8way(load, address);
-      for (let i = 0; i < registers.length; i++) {
-        registers[i].in = input;
-        registers[i].load = dmux[i];
-        registers[i].tick();
-      }
+      registers[address].in = input;
+      registers[address].load = dmux[address];
+      registers[address].tick();
     },
     tock() {
-      for (const register of registers) register.tock();
+      registers[address].tock();
     },
   };
 }

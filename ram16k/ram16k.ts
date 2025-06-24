@@ -63,15 +63,15 @@ export default function ram16k(): RAM16K {
     },
     tick() {
       const dmux = dmux4way(load, sliceBits(address, 0, 2));
-      for (let i = 0; i < rams.length; i++) {
-        rams[i].in = input;
-        rams[i].address = sliceBits(address, 3, 12);
-        rams[i].load = dmux[i];
-        rams[i].tick();
-      }
+      const ram = rams[sliceBits(address, 0, 2)];
+      ram.in = input;
+      ram.address = sliceBits(address, 3, 12);
+      ram.load = dmux[sliceBits(address, 0, 2)];
+      ram.tick();
     },
     tock() {
-      for (const ram of rams) ram.tock();
+      const ram = rams[sliceBits(address, 0, 2)];
+      ram.tock();
     },
   };
 }

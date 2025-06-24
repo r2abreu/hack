@@ -63,15 +63,15 @@ export default function ram512(): RAM512 {
     },
     tick() {
       const dmux = dmux8way(load, sliceBits(address, 0, 3));
-      for (let i = 0; i < rams.length; i++) {
-        rams[i].in = input;
-        rams[i].address = sliceBits(address, 3, 6);
-        rams[i].load = dmux[i];
-        rams[i].tick();
-      }
+      const ram = rams[sliceBits(address, 0, 3)];
+      ram.address = sliceBits(address, 3, 6);
+      ram.in = input;
+      ram.load = dmux[sliceBits(address, 0, 3)];
+      ram.tick();
     },
     tock() {
-      for (const ram of rams) ram.tock();
+      const ram = rams[sliceBits(address, 0, 3)];
+      ram.tock();
     },
   };
 }
