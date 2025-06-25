@@ -1,9 +1,6 @@
 import { assertEquals } from "jsr:@std/assert";
 import CPU from "./cpu.ts";
 
-// Helper to mask to 16 bits
-const mask16 = (n: number) => n & 0xFFFF;
-
 // --- A-instruction: @42 ---
 Deno.test("A-instruction loads A register and addressM", () => {
   const cpu = new CPU();

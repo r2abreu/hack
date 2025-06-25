@@ -21,16 +21,16 @@ export { default as alu } from "./alu/alu.ts";
 export { default as dff } from "./dff/dff.ts";
 export { default as bit } from "./bit/bit.ts";
 export { default as register } from "./register/register.ts";
-export { default as ram8 } from "./ram8/ram8.ts"
-export { default as ram64 } from "./ram64/ram64.ts"
-export { default as ram512 } from "./ram512/ram512.ts"
-export { default as ram4k } from "./ram4k/ram4k.ts"
-export { default as ram16k } from "./ram16k/ram16k.ts"
-export { default as pc } from "./pc/pc.ts"
-export { default as cpu } from "./cpu/cpu.ts"
+export { default as ram8 } from "./ram8/ram8.ts";
+export { default as ram64 } from "./ram64/ram64.ts";
+export { default as ram512 } from "./ram512/ram512.ts";
+export { default as ram4k } from "./ram4k/ram4k.ts";
+export { default as ram16k } from "./ram16k/ram16k.ts";
+export { default as pc } from "./pc/pc.ts";
+export { default as cpu } from "./cpu/cpu.ts";
 export { default as computer } from "./computer/computer.ts";
 export { default as rom32k } from "./rom32k/rom32k.ts";
 export { default as memory } from "./memory/memory.ts";
-
+export { default as assembler } from "./assembler/assembler.ts";
 
 export * from "./utility.ts";
