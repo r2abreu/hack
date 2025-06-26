@@ -1,72 +1,82 @@
 import Parser from "./parse/parse.ts";
 import Code from "./code/code.ts";
 import SymbolTable from "./symbol_table/symbol_table.ts";
-import * as path from "jsr:@std/path";
-
-const prog = Deno.args[0];
-if (!prog) Deno.exit(1);
-
-const file = await Deno.open(
-  `${import.meta.dirname}/${prog.replace("asm", "hack")}`,
-  {
-    write: true,
-    create: true,
-  },
-);
 
 const symbolTable = new SymbolTable();
 const code = new Code();
 
-let parser = new Parser(path.join(import.meta.dirname!, prog));
-let lInstructions = 0;
-for (let i = 0;; i++) {
-  await parser.advance();
-  if (!parser.hasMoreLines) break;
-  if (!parser.currentInstruction) continue;
+export default class Assembler {
+  #firstParser: InstanceType<typeof Parser>;
+  #secondParser: InstanceType<typeof Parser>;
+  #input: ReadableStream<string>;
+  output: TransformStream;
 
-  if (parser.instructionType === "L_INSTRUCTION") {
-    const symbol = parser.symbol;
+  constructor(input: ReadableStream<string>) {
+    this.#input = input;
 
-    if (symbol) symbolTable.addEntry(symbol, i - lInstructions);
-    lInstructions++;
+    const [firstReader, secondReader] = this.#input.tee();
+
+    this.#firstParser = new Parser(firstReader.getReader());
+    this.#secondParser = new Parser(secondReader.getReader());
+
+    this.output = new TransformStream();
   }
-}
 
-const writer = file.writable.getWriter();
-// Second Pass
+  async init() {
+    await this.#firstPass();
 
-parser = new Parser(path.join(import.meta.dirname!, prog));
-while (true) {
-  await parser.advance();
-  if (!parser.hasMoreLines) break;
-  if (!parser.currentInstruction) continue;
+    await this.#secondPass(this.output.writable.getWriter());
+  }
 
-  let output = undefined;
+  async #firstPass() {
+    let lInstructions = 0;
+    for (let i = 0;; i++) {
+      await this.#firstParser.advance();
+      if (!this.#firstParser.hasMoreLines) break;
+      if (this.#firstParser.instructionType !== "L_INSTRUCTION") continue;
+      const symbol = this.#firstParser.symbol;
 
-  if (parser.instructionType === "A_INSTRUCTION") {
-    if (!parser.symbol) break;
-
-    // Label
-    let symbolValue;
-    const parsed = parseInt(parser.symbol);
-    if (Number.isNaN(parsed)) {
-      if (symbolTable.contains(parser.symbol)) {
-        symbolValue = symbolTable.getAddress(parser.symbol);
-      } else {
-        symbolTable.addEntry(parser.symbol);
-        symbolValue = symbolTable.getAddress(parser.symbol);
-      }
-    } else {
-      symbolValue = parsed;
+      if (symbol) symbolTable.addEntry(symbol, i - lInstructions);
+      lInstructions++;
     }
-
-    output = symbolValue.toString(2).padStart(16, "0");
-  } else if (parser.instructionType === "C_INSTRUCTION") {
-    const comp = code.comp(parser.comp);
-    const dest = code.dest(parser.dest);
-    const jump = code.jump(parser.jump);
-    output = `111${comp}${dest}${jump}`;
   }
 
-  if (output) writer.write(new TextEncoder().encode(output + "\n"));
+  async #secondPass(streamWriter: WritableStreamDefaultWriter) {
+    while (true) {
+      await this.#secondParser.advance();
+      if (!this.#secondParser.hasMoreLines) break;
+      if (!this.#secondParser.currentInstruction) continue;
+
+      let output = undefined;
+
+      if (this.#secondParser.instructionType === "A_INSTRUCTION") {
+        if (!this.#secondParser.symbol) break;
+
+        // Label
+        let symbolValue;
+        const parsed = parseInt(this.#secondParser.symbol);
+        if (Number.isNaN(parsed)) {
+          if (symbolTable.contains(this.#secondParser.symbol)) {
+            symbolValue = symbolTable.getAddress(this.#secondParser.symbol);
+          } else {
+            symbolTable.addEntry(this.#secondParser.symbol);
+            symbolValue = symbolTable.getAddress(this.#secondParser.symbol);
+          }
+        } else {
+          symbolValue = parsed;
+        }
+
+        output = symbolValue.toString(2).padStart(16, "0");
+      } else if (this.#secondParser.instructionType === "C_INSTRUCTION") {
+        const comp = code.comp(this.#secondParser.comp);
+        const dest = code.dest(this.#secondParser.dest);
+        const jump = code.jump(this.#secondParser.jump);
+        output = `111${comp}${dest}${jump}`;
+      }
+
+      if (output) console.log(output);
+      if (output) streamWriter.write(new TextEncoder().encode(output + "\n"));
+    }
+    streamWriter.close();
+  }
 }

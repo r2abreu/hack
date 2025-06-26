@@ -1,14 +1,10 @@
-import { TextLineStream } from "jsr:@std/streams";
-
 export default class Parser {
   currentInstruction = "";
   hasMoreLines = true;
-  #reader: ReadableStreamDefaultReader<string>;
-  #path;
+  #streamReader: ReadableStreamDefaultReader<string>;
 
-  constructor(path: string) {
-    this.#path = path;
-    this.#reader = this.#openFile();
+  constructor(streamReader: ReadableStreamDefaultReader<string>) {
+    this.#streamReader = streamReader;
   }
 
   get dest(): string {
@@ -35,11 +31,12 @@ export default class Parser {
     if (this.instructionType !== "C_INSTRUCTION") return "";
 
     // dest=comp;jump
-    if (this.currentInstruction.includes("=")) {
-      return this.currentInstruction.split("=")[1];
-    } else {
-      return this.currentInstruction.split(";")[0];
-    }
+    // "D=M+1;JGT"
+
+    const nosemi = this.currentInstruction.split(";")[0];
+    const equal = nosemi.split("=");
+
+    return equal.length === 1 ? equal[0] : equal[1];
   }
 
   get jump(): string {
@@ -60,7 +57,7 @@ export default class Parser {
   }
 
   async advance() {
-    const { value, done } = await this.#reader.read();
+    const { value, done } = await this.#streamReader.read();
     this.hasMoreLines = !done;
 
     if (done) {
@@ -76,14 +73,5 @@ export default class Parser {
     }
 
     this.currentInstruction = trimmed;
-  }
-
-  #openFile() {
-    const file = Deno.openSync(this.#path);
-
-    return file.readable
-      .pipeThrough(new TextDecoderStream())
-      .pipeThrough(new TextLineStream())
-      .getReader();
   }
 }
