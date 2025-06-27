@@ -11,9 +11,8 @@ function stringToStream(str: string): ReadableStream<string> {
   });
 }
 
-// Helper: Collect output from TransformStream
-async function collectStream(stream: TransformStream): Promise<string> {
-  const reader = stream.readable.getReader();
+async function collectStream(stream: ReadableStream): Promise<string> {
+  const reader = stream.getReader();
   let result = "";
   while (true) {
     const { value, done } = await reader.read();
@@ -89,9 +88,7 @@ Deno.test("Assembler produces correct output for Mult.asm", async () => {
   const inputStream = stringToStream(MULT_ASM);
   const assembler = new Assembler(inputStream);
 
-  await assembler.init();
-
-  const output = await collectStream(assembler.output);
+  const output = await collectStream(await assembler.assemble());
 
   assertEquals(output, MULT_HACK);
 });
@@ -101,9 +98,7 @@ Deno.test("Assembler handles empty input", async () => {
   const inputStream = stringToStream("");
   const assembler = new Assembler(inputStream);
 
-  await assembler.init();
-
-  const output = await collectStream(assembler.output);
+  const output = await collectStream(await assembler.assemble());
 
   assertEquals(output, "");
 });
@@ -112,9 +107,9 @@ Deno.test("Assembler handles only labels", async () => {
   const inputStream = stringToStream("(LOOP)\n(END)");
   const assembler = new Assembler(inputStream);
 
-  await assembler.init();
+  await assembler.assemble();
 
-  const output = await collectStream(assembler.output);
+  const output = await collectStream(await assembler.assemble());
 
   assertEquals(output, "");
 });

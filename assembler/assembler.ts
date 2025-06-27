@@ -2,79 +2,84 @@ import Parser from "./parse/parse.ts";
 import Code from "./code/code.ts";
 import SymbolTable from "./symbol_table/symbol_table.ts";
 
-const symbolTable = new SymbolTable();
-const code = new Code();
-
 export default class Assembler {
-  #firstParser: InstanceType<typeof Parser>;
-  #secondParser: InstanceType<typeof Parser>;
+  #labelResolutionParser: InstanceType<typeof Parser>;
+  #codeGenerationParser: InstanceType<typeof Parser>;
   #input: ReadableStream<string>;
-  output: TransformStream;
+  #code = new Code();
+  symbolTable: SymbolTable = new SymbolTable();
 
   constructor(input: ReadableStream<string>) {
     this.#input = input;
 
     const [firstReader, secondReader] = this.#input.tee();
 
-    this.#firstParser = new Parser(firstReader.getReader());
-    this.#secondParser = new Parser(secondReader.getReader());
-
-    this.output = new TransformStream();
+    this.#labelResolutionParser = new Parser(firstReader.getReader());
+    this.#codeGenerationParser = new Parser(secondReader.getReader());
   }
 
-  async init() {
+  async assemble(): Promise<ReadableStream> {
+    const output = new TransformStream();
     await this.#firstPass();
+    await this.#secondPass(output.writable.getWriter());
 
-    await this.#secondPass(this.output.writable.getWriter());
+    return output.readable;
   }
 
   async #firstPass() {
     let lInstructions = 0;
     for (let i = 0;; i++) {
-      await this.#firstParser.advance();
-      if (!this.#firstParser.hasMoreLines) break;
-      if (this.#firstParser.instructionType !== "L_INSTRUCTION") continue;
-      const symbol = this.#firstParser.symbol;
+      await this.#labelResolutionParser.advance();
+      if (!this.#labelResolutionParser.hasMoreLines) break;
+      if (this.#labelResolutionParser.instructionType !== "L_INSTRUCTION") {
+        continue;
+      }
+      const symbol = this.#labelResolutionParser.symbol;
 
-      if (symbol) symbolTable.addEntry(symbol, i - lInstructions);
+      if (symbol) this.symbolTable.addEntry(symbol, i - lInstructions);
       lInstructions++;
     }
   }
 
   async #secondPass(streamWriter: WritableStreamDefaultWriter) {
     while (true) {
-      await this.#secondParser.advance();
-      if (!this.#secondParser.hasMoreLines) break;
-      if (!this.#secondParser.currentInstruction) continue;
+      await this.#codeGenerationParser.advance();
+      if (!this.#codeGenerationParser.hasMoreLines) break;
+      if (!this.#codeGenerationParser.currentInstruction) continue;
 
       let output = undefined;
 
-      if (this.#secondParser.instructionType === "A_INSTRUCTION") {
-        if (!this.#secondParser.symbol) break;
+      if (this.#codeGenerationParser.instructionType === "A_INSTRUCTION") {
+        if (!this.#codeGenerationParser.symbol) break;
 
         // Label
         let symbolValue;
-        const parsed = parseInt(this.#secondParser.symbol);
+        const parsed = parseInt(this.#codeGenerationParser.symbol);
         if (Number.isNaN(parsed)) {
-          if (symbolTable.contains(this.#secondParser.symbol)) {
-            symbolValue = symbolTable.getAddress(this.#secondParser.symbol);
+          if (this.symbolTable.contains(this.#codeGenerationParser.symbol)) {
+            symbolValue = this.symbolTable.getAddress(
+              this.#codeGenerationParser.symbol,
+            );
           } else {
-            symbolTable.addEntry(this.#secondParser.symbol);
-            symbolValue = symbolTable.getAddress(this.#secondParser.symbol);
+            this.symbolTable.addEntry(this.#codeGenerationParser.symbol);
+            symbolValue = this.symbolTable.getAddress(
+              this.#codeGenerationParser.symbol,
+            );
           }
         } else {
           symbolValue = parsed;
         }
 
         output = symbolValue.toString(2).padStart(16, "0");
-      } else if (this.#secondParser.instructionType === "C_INSTRUCTION") {
-        const comp = code.comp(this.#secondParser.comp);
-        const dest = code.dest(this.#secondParser.dest);
-        const jump = code.jump(this.#secondParser.jump);
+      } else if (
+        this.#codeGenerationParser.instructionType === "C_INSTRUCTION"
+      ) {
+        const comp = this.#code.comp(this.#codeGenerationParser.comp);
+        const dest = this.#code.dest(this.#codeGenerationParser.dest);
+        const jump = this.#code.jump(this.#codeGenerationParser.jump);
         output = `111${comp}${dest}${jump}`;
       }
 
-      if (output) console.log(output);
       if (output) streamWriter.write(new TextEncoder().encode(output + "\n"));
     }
     streamWriter.close();
