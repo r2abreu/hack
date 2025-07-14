@@ -53,14 +53,38 @@ export default class Code {
   ]);
 
   jump(value: string) {
-    return this.#jumps.get(value) || "";
+    const jumpValue = this.#jumps.get(value);
+
+    if (!jumpValue) {
+      throw new Error(
+        `Invalid hack instruction: Invalid jump: ${value}`,
+      );
+    }
+
+    return jumpValue;
   }
 
   comp(value: string) {
-    return this.#comps.get(value) || "";
+    const compValue = this.#comps.get(value);
+
+    if (!compValue) {
+      throw new Error(
+        `Invalid hack instruction: Invalid computation: ${value}`,
+      );
+    }
+
+    return compValue;
   }
 
   dest(value: string) {
-    return this.#destinations.get(value) || "";
+    const destValue = this.#destinations.get(value);
+
+    if (!destValue) {
+      throw new Error(
+        `Invalid hack instruction: Invalid destination: ${value}`,
+      );
+    }
+
+    return destValue;
   }
 }
