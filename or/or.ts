@@ -16,11 +16,6 @@ import nand from "../nand/nand.ts";
  *
  * Returns the logical OR of a and b.
  */
-export default function or(a: number, b: number): number {
-  const nota = nand(a, a);
-  const notb = nand(b, b);
-  const nandab = nand(nota, notb);
-  const nandnandab = nand(nandab, nandab);
+const or = (a: number, b: number): number => nand(nand(a, a), nand(b, b));
 
-  return nand(nandnandab, nandnandab);
-}
+export default or;
