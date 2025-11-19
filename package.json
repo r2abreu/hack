@@ -1,0 +1,17 @@
+{
+  "name": "@r2abreu/hack",
+  "version": "1.0.0",
+  "description": "TypeScript implementation of the Hack computer architecture, as described in _The Elements of Computing Systems_ by **Noam Nisan and Shimon Schocken**.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r2abreu/hack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/r2abreu/hack/issues"
+  },
+  "homepage": "https://github.com/r2abreu/hack#readme"
+}

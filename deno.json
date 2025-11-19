@@ -3,7 +3,7 @@
   "version": "0.23.0",
   "license": "MIT",
   "exports": {
-    ".": "./main.ts"
+    ".": "./src/main.ts"
   },
   "tasks": {
     "test": "deno test --allow-read",
