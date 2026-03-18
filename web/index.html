@@ -30,6 +30,32 @@
         opacity: 0.5;
       }
 
+      #controls {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      #controls button {
+        font-family: monospace;
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+        background: #333;
+        color: #ccc;
+        border: 1px solid #555;
+        cursor: pointer;
+      }
+
+      #controls button:hover {
+        background: #444;
+      }
+
+      #controls button.active {
+        background: #666;
+        color: #fff;
+        border-color: #888;
+      }
+
       /* The canvas is 512×256 in Hack pixels. Scale it up 2× so it's
          comfortable to view without blurring (nearest-neighbour scaling). */
       canvas {
@@ -42,6 +68,11 @@
   </head>
   <body>
     <h1>Hack Emulator</h1>
+    <div id="controls">
+      <button data-program="lol" class="active">LOL</button>
+      <button data-program="pixel">Pixel</button>
+      <button data-program="life">Life</button>
+    </div>
     <canvas id="screen"></canvas>
     <script type="module" src="./main.ts"></script>
   </body>

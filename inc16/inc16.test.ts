@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import inc16 from "./inc16.ts";
 
 // Helper: pad to 16 bits for display (optional)

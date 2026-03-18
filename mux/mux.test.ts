@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import mux from "./mux.ts";
 
 Deno.test("MUX gate function", () => {

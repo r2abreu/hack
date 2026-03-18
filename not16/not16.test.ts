@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import not16 from "./not16.ts";
 
 Deno.test("not16 function (numbers version, explicit)", () => {

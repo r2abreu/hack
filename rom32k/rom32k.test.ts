@@ -1,5 +1,5 @@
 import rom32k from "./rom32k.ts";
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 
 // This test assumes instructions.txt is present and contains at least the following lines:
 // 0000000000000010

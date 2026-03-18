@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import Register from "./register.ts";
 import { mask } from "../utility.ts";
 

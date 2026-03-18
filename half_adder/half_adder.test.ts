@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import half_adder from "./half_adder.ts";
 
 Deno.test("HalfAdder function", () => {

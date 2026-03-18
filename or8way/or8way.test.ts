@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import or8way from "./or8way.ts";
 
 // All zeros, should return 0

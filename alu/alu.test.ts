@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import alu, { type AluControlBits } from "./alu.ts";
 
 // Helper for binary formatting (optional, for readable error messages)

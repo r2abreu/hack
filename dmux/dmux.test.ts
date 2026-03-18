@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import dmux from "./dmux.ts";
 
 Deno.test("DMUX gate function", () => {

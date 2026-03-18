@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert";
+import { assert, assertEquals } from "@std/assert";
 import SymbolTable from "./symbol_table.ts";
 
 Deno.test("SymbolTable: built-in symbols are present with correct addresses", () => {

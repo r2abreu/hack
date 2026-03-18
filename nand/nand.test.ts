@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import nand from "./nand.ts";
 
 Deno.test("NAND gate function", () => {

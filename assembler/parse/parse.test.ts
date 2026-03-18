@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import Parser from "./parse.ts";
 
 // Helper: Convert array of strings to ReadableStream<string>

@@ -7,12 +7,22 @@
   },
   "tasks": {
     "test": "deno test --allow-read",
-    "bench": "deno bench */bench/index.ts --allow-read"
+    "bench": "deno bench */bench/index.ts --allow-read",
+    "build:web": "cd web && deno run -A npm:vite build",
+    "dev": "cd web && deno run -A npm:vite build && deno run --allow-net --allow-read jsr:@std/http/file-server dist --host 0.0.0.0 --port 3000"
   },
   "publish": {
-    "exclude": ["*.test.ts", ".devcontainer", "**/bench/*"]
+    "exclude": [
+      "*.test.ts",
+      ".devcontainer",
+      "**/bench/*"
+    ]
   },
   "fmt": {
     "lineWidth": 80
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "vite": "npm:vite@^8.0.0"
   }
 }

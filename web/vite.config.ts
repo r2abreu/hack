@@ -1,4 +1,4 @@
-import { defineConfig } from "npm:vite@6";
+import { defineConfig } from "vite";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,8 +15,11 @@ export default defineConfig({
   },
 
   server: {
+    host: true,
+    port: 3000,
     fs: {
       allow: [".."],
     },
+    hmr: false
   },
 });

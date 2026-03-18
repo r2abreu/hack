@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import CPU from "./cpu.ts";
 
 // --- A-instruction: @42 ---

@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import mux4way16 from "./mux4way16.ts";
 
 // Define 16-bit test patterns as numbers

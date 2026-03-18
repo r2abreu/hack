@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import Assembler from "./assembler.ts";
 
 // Helper: Convert string to ReadableStream<string>

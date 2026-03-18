@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import and from "./and.ts";
 
 Deno.test("AND gate function", () => {

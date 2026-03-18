@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import DFF from "./dff.ts";
 
 Deno.test("DFF: outputs 0 initially", () => {

@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import Bit from "./bit.ts"; // Adjust the import as needed
 
 Deno.test("Bit: outputs 0 initially", () => {

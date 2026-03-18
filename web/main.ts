@@ -2,34 +2,22 @@
  * @module web/main
  *
  * Browser entry point for the Hack emulator.
- *
- * Wires together:
- *   - The LOL ROM (assembled binary, imported as a raw text asset by Vite)
- *   - `EmulatorComputer`  — chip-level simulation
- *   - `CanvasDisplayDriver` — renders pixels onto the <canvas> element
- *   - `HackEmulator`      — the platform-agnostic clock loop
- *
- * To run:
- *   cd web && npm install && npm run dev
  */
 
-import { createEmulatorComputer } from "../emulator/emulator_computer.ts";
+import { createFastEmulatorComputer } from "../emulator/fast_emulator_computer.ts";
 import { HackEmulator } from "../emulator/hack_emulator.ts";
 import { CanvasDisplayDriver } from "../emulator/drivers/canvas_display.ts";
 
-// Vite's `?raw` suffix imports the file contents as a plain string at
-// bundle time — no fetch required, no async loading.
 import lolHack from "../programs/lol.hack?raw";
+import pixelHack from "../programs/pixel.hack?raw";
+import lifeHack from "../programs/life.hack?raw";
 
-// ── ROM loader ────────────────────────────────────────────────────────────────
+const programs: Record<string, string> = {
+  lol: lolHack,
+  pixel: pixelHack,
+  life: lifeHack,
+};
 
-/**
- * Parse an assembled `.hack` file (one 16-bit binary string per line) into
- * the ROM function expected by `createEmulatorComputer`.
- *
- * @param hack  Raw text content of the `.hack` file.
- * @returns     A function mapping instruction address → 16-bit value.
- */
 function parseRom(hack: string): (address: number) => number | undefined {
   const lines = hack.split("\n").filter((l) => l.trim().length > 0);
   return (address) => {
@@ -38,15 +26,30 @@ function parseRom(hack: string): (address: number) => number | undefined {
   };
 }
 
-// ── Wiring ────────────────────────────────────────────────────────────────────
-
 const canvas = document.getElementById("screen") as HTMLCanvasElement;
-
-const rom = parseRom(lolHack);
-const computer = createEmulatorComputer(rom);
 const display = new CanvasDisplayDriver(canvas);
-const emulator = new HackEmulator(computer, display);
 
-// 10 000 cycles per frame gives the LOL program plenty of time to draw before
-// the first render, while keeping the loop smooth at ~60 fps.
-emulator.start(10_000);
+let emulator: HackEmulator | null = null;
+
+function run(name: string) {
+  if (emulator) emulator.stop();
+
+  const rom = parseRom(programs[name]);
+  const computer = createFastEmulatorComputer(rom);
+  emulator = new HackEmulator(computer, display);
+  const cycles = name === "life" ? 100_000 : 10_000;
+  emulator.start(cycles);
+
+  document.querySelectorAll("#controls button").forEach((btn) => {
+    btn.classList.toggle("active", (btn as HTMLElement).dataset.program === name);
+  });
+}
+
+document.querySelectorAll("#controls button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const name = (btn as HTMLElement).dataset.program!;
+    run(name);
+  });
+});
+
+run("lol");

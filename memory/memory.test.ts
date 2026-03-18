@@ -1,5 +1,5 @@
 import Memory from "./memory.ts";
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { mask } from "../utility.ts";
 
 // Test writing and reading to RAM region (address < 24575)

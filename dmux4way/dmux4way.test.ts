@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import dmux4way from "./dmux4way.ts";
 const _in: number = 1;
 

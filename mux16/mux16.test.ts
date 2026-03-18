@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import mux16 from "./mux16.ts";
 
 // Test case 1: sel is 0, should return A

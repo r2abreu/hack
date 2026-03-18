@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import RAM8 from "./ram8.ts";
 
 // 16-bit mask to ensure values are always 16 bits

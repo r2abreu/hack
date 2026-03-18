@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import or16 from "./or16.ts";
 
 Deno.test("or16 function (numbers version, explicit)", () => {

@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import Code from "./code.ts";
 
 Deno.test("Code.dest returns correct binary codes", () => {

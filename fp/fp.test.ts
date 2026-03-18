@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import { compose, filter, head, pipe, split, tail } from "./fp.ts";
 
 Deno.test("head: returns first element", () => {

@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import PC from "./pc.ts";
 
 Deno.test("PC: outputs 0 initially", () => {

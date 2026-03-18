@@ -1,5 +1,5 @@
 import SCREEN from "./screen.ts";
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 
 // Helper to ensure 16-bit values
 const mask16 = (n: number) => n & 0xFFFF;

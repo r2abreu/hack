@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import add16 from "./add16.ts";
 
 // 0 + 0 = 0

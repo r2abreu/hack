@@ -1,4 +1,4 @@
-import { assertEquals } from "jsr:@std/assert";
+import { assertEquals } from "@std/assert";
 import mux8way16 from "./mux8way16.ts";
 
 // Use 16-bit numbers as inputs
