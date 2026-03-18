@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hack Emulator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #1a1a1a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        font-family: monospace;
+        color: #ccc;
+      }
+
+      h1 {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        opacity: 0.5;
+      }
+
+      /* The canvas is 512×256 in Hack pixels. Scale it up 2× so it's
+         comfortable to view without blurring (nearest-neighbour scaling). */
+      canvas {
+        width: 1024px;
+        height: 512px;
+        image-rendering: pixelated;
+        border: 1px solid #444;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hack Emulator</h1>
+    <canvas id="screen"></canvas>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
