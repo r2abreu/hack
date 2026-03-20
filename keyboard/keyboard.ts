@@ -1,4 +1,4 @@
-import Register from "../register/register.ts";
+import _Register, { type Register } from "../register/register.ts";
 
 /**
  * KEYBOARD - Memory-mapped keyboard input chip for Hack computer.
@@ -31,6 +31,6 @@ import Register from "../register/register.ts";
  *   // A key is pressed; process input
  * }
  */
-export default function () {
-  return Register();
+export default function (): Register {
+  return _Register();
 }

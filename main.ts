@@ -33,5 +33,6 @@ export { default as rom32k } from "./rom32k/rom32k.ts";
 export { default as memory } from "./memory/memory.ts";
 export { default as Assembler } from "./assembler/assembler.ts";
 export { default as Screen } from "./screen/screen.ts";
+export { default as Keyboard } from "./keyboard/keyboard.ts";
 
 export * from "./utility.ts";
